@@ -1,6 +1,6 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
 import Regex
 
 main = Html.beginnerProgram { model = model, view = view, update = update }
@@ -10,13 +10,14 @@ type alias Model =
  { name : String
  , password : String
  , passwordAgain : String
+ , age : Int
  }
 
 model : Model
-model = Model "" "" ""
+model = Model "" "" "" 0
 
 -- UPDATE
-type Msg = Name String | Password String | PasswordAgain String
+type Msg = Name String | Password String | PasswordAgain String | Age String
 
 update : Msg -> Model -> Model
 update msg model = 
@@ -24,6 +25,7 @@ update msg model =
   Name name -> { model | name = name }
   Password password -> { model | password = password }
   PasswordAgain password -> { model | passwordAgain = password }
+  Age age -> { model | age = Result.withDefault 0 (String.toInt age)}
 
 -- VIEW
 view : Model -> Html Msg
@@ -32,6 +34,7 @@ view model =
   [ input [ type_ "text", placeholder "Name", onInput Name ] []
   , input [ type_ "password", placeholder "Password", onInput Password ] []
   , input [ type_ "password", placeholder "Re Password", onInput PasswordAgain ] []
+  , input [ type_ "int", placeholder "Age", onInput Age ] []
   , viewValidation model
   ]
 
